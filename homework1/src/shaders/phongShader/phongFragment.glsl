@@ -89,17 +89,21 @@ void uniformDiskSamples( const in vec2 randomSeed ) {
   }
 }
 
+float getShadowBias(){
+  return 0.005 + 0.003* (1.0 - dot(normalize(vNormal) , normalize(uLightPos - vFragPos)));
+}
+
 float findBlocker( sampler2D shadowMap,  vec2 uv, float zReceiver ) {
   // uniformDiskSamples(uv);
   poissonDiskSamples(uv);
 
   float blockerSum = 0.0;
   int blockerCnt = 0;
-  float blockerSearchSize = length(uLightPos - vFragPos) / TEXTURE_SIZE * LIGHT_WIDTH / TEXTURE_SIZE;
+  float blockerSearchSize = length(uLightPos - vFragPos) / TEXTURE_SIZE * LIGHT_WIDTH / 30.0;
   for(int i=0;i<BLOCKER_SEARCH_NUM_SAMPLES;i++){
     vec2 offset = poissonDisk[i] * blockerSearchSize;
-    float sampleDepth = unpack(texture2D(shadowMap, uv + blockerSearchSize));
-    if( sampleDepth < zReceiver ){
+    float sampleDepth = unpack(texture2D(shadowMap, uv + offset));
+    if( sampleDepth < zReceiver + EPS){
       blockerCnt++;
       blockerSum += sampleDepth;
     }
@@ -109,10 +113,6 @@ float findBlocker( sampler2D shadowMap,  vec2 uv, float zReceiver ) {
     return -1.0;
 
 	return blockerSum / float(blockerCnt);
-}
-
-float getShadowBias(){
-  return 0.005 + 0.003* (1.0 - dot(normalize(vNormal) , normalize(uLightPos - vFragPos)));
 }
 
 float PCF(sampler2D shadowMap, vec4 coords, float filterSize) {
