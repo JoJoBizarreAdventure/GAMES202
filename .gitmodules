@@ -1,0 +1,3 @@
+[submodule "Assignment2/nori"]
+	path = Assignment2/nori
+	url = git@github.com:wjakob/nori.git
