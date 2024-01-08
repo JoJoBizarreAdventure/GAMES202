@@ -1,1 +1,13 @@
 build/
+
+homework2/assets/cubemap/CornellBox/light.txt
+homework2/assets/cubemap/CornellBox/transport.txt
+
+homework2/assets/cubemap/GraceCathedral/light.txt
+homework2/assets/cubemap/GraceCathedral/transport.txt
+
+homework2/assets/cubemap/Indoor/light.txt
+homework2/assets/cubemap/Indoor/transport.txt
+
+homework2/assets/cubemap/Skybox/light.txt
+homework2/assets/cubemap/Skybox/transport.txt
