@@ -5,7 +5,7 @@ cd build
 cmake ..
 make -j8
 ./lut-Emu-MC
-./lut-Eavg-MC
+# ./lut-Eavg-MC
 ./lut-Emu-IS
-# ./lut-Eavg-IS
+./lut-Eavg-IS
 cd ..

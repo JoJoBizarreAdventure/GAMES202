@@ -25,13 +25,42 @@ Vec2f Hammersley(uint32_t i, uint32_t N) {
     return {float(i) / float(N), rdi};
 }
 
+/** details at https://backend.orbit.dtu.dk/ws/portalfiles/portal/126824972/onb_frisvad_jgt2012_v2.pdf
+ *   Building an Orthonormal Basis froma 3D Unit Vector n
+ **/
+void LocalBasis(Vec3f n, Vec3f &b1, Vec3f &b2)
+{
+    float sign_ = n.z < 0.0 ? -1.0 : 1.0;
+    float a = -1.0 / (sign_ + n.z);
+    float b = n.x * n.y * a;
+    b1 = Vec3f(1.0 + sign_ * n.x * n.x * a, sign_ * b, -sign_ * n.x);
+    b2 = Vec3f(b, sign_ + n.y * n.y * a, -n.y);
+}
+
 Vec3f ImportanceSampleGGX(Vec2f Xi, Vec3f N, float roughness) {
 
     float a = roughness * roughness;
 
     // TODO: Copy the code from your previous work - Bonus 1
+    // TODO: in spherical space - Bonus 1
+    float theta_m = atan2(a * sqrt(Xi.x), sqrt(1 - Xi.x));
+    float phi_h = 2 * PI * Xi.y;
 
-    return Vec3f(1.0f);
+    // TODO: from spherical space to cartesian space - Bonus 1
+    float sinTheta = sin(theta_m);
+    Vec3f H = {
+        cos(phi_h) * sinTheta,
+        sin(phi_h) * sinTheta,
+        cos(theta_m)};
+
+    // TODO: tangent coordinates - Bonus 1
+    Vec3f b1,b2;
+    LocalBasis(N, b1, b2);
+
+    // TODO: transform H to tangent space - Bonus 1
+    Vec3f tangentH = b1 * H.x + b2 * H.y + N * H.z;
+
+    return normalize(tangentH);
 }
 
 
@@ -52,10 +81,10 @@ Vec3f IntegrateEmu(Vec3f V, float roughness, float NdotV, Vec3f Ei) {
         float NoV = std::max(dot(N, V), 0.0f);
 
         // TODO: To calculate Eavg here - Bonus 1
-        
+        Eavg += Ei * NoL;
     }
 
-    return Vec3f(1.0);
+    return Eavg * 2.0f / sample_count;
 }
 
 void setRGB(int x, int y, float alpha, unsigned char *data) {
