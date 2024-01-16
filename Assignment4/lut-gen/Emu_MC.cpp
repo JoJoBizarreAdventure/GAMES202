@@ -91,7 +91,7 @@ Vec3f IntegrateBRDF(Vec3f V, float roughness, float NdotV)
         // TODO: To calculate (fr * ni) / p_o here
         Vec3f L = normalize(sampleList.directions[i]);
         Vec3f H = normalize(V + L);
-        float NoL =  std::max(0.0f, dot(N, L));
+        float NoL =  std::max(0.0f, L.z);
         float mu = NoL;
 
         float F = 1;
