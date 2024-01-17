@@ -39,4 +39,11 @@ endif()
 
 ########################################
 
+# copy example file
+message(${CMAKE_BINARY_DIR}/examples)
+if(NOT EXISTS ${CMAKE_BINARY_DIR}/examples)
+    file(COPY examples 
+    DESTINATION ${CMAKE_BINARY_DIR})
+endif()
+
 add_executable(Denoise ${SOURCE_FILE})
