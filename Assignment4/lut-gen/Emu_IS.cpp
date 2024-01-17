@@ -81,10 +81,17 @@ float GeometrySmith(float roughness, float NoV, float NoL)
     return ggx1 * ggx2;
 }
 
+#define SPLIT_SUM 1
+
 Vec3f IntegrateBRDF(Vec3f V, float roughness)
 {
     const int sample_count = 1024;
+#if !SPLIT_SUM
     float sum = 0.0;
+#else
+    float weightSum = 0.0;
+    float LiSum = 0.0;
+#endif
     Vec3f N = Vec3f(0.0, 0.0, 1.0);
     for (int i = 0; i < sample_count; i++)
     {
@@ -102,12 +109,19 @@ Vec3f IntegrateBRDF(Vec3f V, float roughness)
         float G = GeometrySmith(roughness, NoV, NoL);
         
         float weight = VoH * G / NoV / NoH;
+#if !SPLIT_SUM
         sum += weight * Li;
-
+#else
         // Split Sum - Bonus 2
+        weightSum += weight;
+        LiSum += Li;
+#endif
     }
-
+#if !SPLIT_SUM
     return Vec3f(sum / sample_count);
+#else
+    return Vec3f(weightSum / sample_count * LiSum / sample_count);
+#endif
 }
 
 int main()
