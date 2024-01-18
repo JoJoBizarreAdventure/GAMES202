@@ -46,4 +46,7 @@ if(NOT EXISTS ${CMAKE_BINARY_DIR}/examples)
     DESTINATION ${CMAKE_BINARY_DIR})
 endif()
 
+# enable using a-trous wavelet filter
+add_definitions(-DUSE_A_TROUS_WAVELET_FILTER)
+
 add_executable(Denoise ${SOURCE_FILE})
